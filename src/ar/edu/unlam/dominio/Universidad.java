@@ -25,7 +25,7 @@ public class Universidad {
         aulas = new HashSet<>();
 }
     
-    public boolean agregarMateria(Materia materia) {//mati
+    public boolean agregarMateria(Materia materia) {
         if(materias.contains(materia)){
         	return false; 
         }  
@@ -33,7 +33,7 @@ public class Universidad {
         return true;
     }
     
-    public boolean agregarAlumno(Alumno alumno) {//karen
+    public boolean agregarAlumno(Alumno alumno) {
         if (alumnos.contains(alumno)) {
         	return false; 
 		}
@@ -41,8 +41,8 @@ public class Universidad {
         return true;
     }
 
-    public boolean agregarCicloLectivo(CicloLectivo ciclo) {//mati
-        for (CicloLectivo listaCiclos : ciclosLectivos) {
+    public boolean agregarCicloLectivo(CicloLectivo ciclo) {
+    	/*for (CicloLectivo listaCiclos : ciclosLectivos) {
             if (listaCiclos.getId() == ciclo.getId() ||
                 (ciclo.getFechaInicio().isAfter(listaCiclos.getFechaInicio()) &&
                  ciclo.getFechaInicio().isBefore(listaCiclos.getFechaFinalizacion())) ||
@@ -53,9 +53,12 @@ public class Universidad {
         }
         ciclosLectivos.add(ciclo);
         return true;
+        */
+    	
+    	
     }
 
-    public boolean agregarComision(Comision comision) {//karen
+    public boolean agregarComision(Comision comision) {
         for (Comision listaComisiones : comisiones) {
             if (listaComisiones.getId() == comision.getId() ||
                 (listaComisiones.getMateria().getId() == comision.getMateria().getId() &&
@@ -68,7 +71,7 @@ public class Universidad {
         return true;
     }
 
-    public boolean agregarDocente(Docente docente) {//mati
+    public boolean agregarDocente(Docente docente) {
     	if (docentes.contains(docente)) {
 			return false;
 		}
@@ -76,7 +79,7 @@ public class Universidad {
         return true;
     }
 
-    public boolean asignarDocentesAComision(int idComision, int dniDocente) {//mati
+    public boolean asignarDocentesAComision(int idComision, int dniDocente) {
         Comision comision = buscarComisionPorId(idComision);
         Docente docente = buscarDocentePorDni(dniDocente);
         

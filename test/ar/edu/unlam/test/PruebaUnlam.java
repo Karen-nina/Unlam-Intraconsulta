@@ -27,7 +27,7 @@ public class PruebaUnlam {
     public void queSePuedaAgregarAlumno() {
         Universidad universidad = new Universidad();
         LocalDate fechaNacimiento = LocalDate.of(1995, 9, 17);
-        Date fechaIngreso = new Date(2022,4,01);
+        LocalDate fechaIngreso = LocalDate.of(2022,4,01);
         
         Alumno alumno1 = new Alumno(12345, "Juan", "Pérez", fechaNacimiento, fechaIngreso);
         Alumno alumno2 = new Alumno(12345, "Lucía", "García", fechaNacimiento, fechaIngreso); // Duplicado de DNI
@@ -39,8 +39,15 @@ public class PruebaUnlam {
     @Test
     public void agregarCicloLectivo() {
         Universidad universidad = new Universidad();
-        CicloLectivo ciclo1 = new CicloLectivo(2023, new Date(), new Date(), new Date(), new Date());
-        CicloLectivo ciclo2 = new CicloLectivo(2023, new Date(), new Date(), new Date(), new Date()); // Mismo ID
+        
+        Integer id = 01;
+        LocalDate fechaInicio = LocalDate.of(2022,4,01);
+        LocalDate fechaFinalizacion = LocalDate.of(2022,4,01);
+        LocalDate fechaInicioInscripcion = LocalDate.of(2022,4,01);
+        LocalDate fechaFinalizacionInscripcion = LocalDate.of(2022,4,01);
+        
+        CicloLectivo ciclo1 = new CicloLectivo(id, fechaInicio, fechaFinalizacion, fechaInicioInscripcion, fechaFinalizacionInscripcion);
+        CicloLectivo ciclo2 = new CicloLectivo(id, fechaInicio, fechaFinalizacion, fechaInicioInscripcion, fechaFinalizacionInscripcion); // Mismo ID
         
         assertTrue(universidad.agregarCicloLectivo(ciclo1));
         assertFalse(universidad.agregarCicloLectivo(ciclo2)); // Intentar agregar un ciclo con el mismo ID debe fallar
