@@ -82,11 +82,6 @@ public class Universidad {
 			}
 		}
 		return false;
-
-		/*
-		 * if (!comision.getDocentes().contains(docente)) {
-		 * comision.getDocentes().add(docente); return true; } return false;
-		 */
 	}
 
 	public boolean agregarCorrelatividad(Integer idMateria, Integer idCorrelativa) {
@@ -143,26 +138,24 @@ public class Universidad {
 		Comision comision = buscarComisionPorId(idComision);
 		Alumno alumno = buscarAlumnoPorDni(dniAlumno);
 
-		/*if (!esFechaDeInscripcionValida(comision, fechaInscripcionActual) || !tieneTodasLasCorrelativasAprobadas(comision, alumno)
-				|| !hayCupoEnAula(comision) || estaInscritoEnOtraComisionMismoDiaTurno(comision, alumno)
-				|| alumno.getMateriasAprobadas().contains(comision.getMateria())) {
+		if (!esFechaDeInscripcionValida(comision, fechaInscripcionActual)
+				|| !tieneTodasLasCorrelativasAprobadas(comision, alumno) || !hayCupoEnAula(comision)
+				|| estaInscritoEnOtraComisionMismoDiaTurno(comision, alumno)
+				|| alumno.getMateriasAprobadas().contains(comision.getMateria())
+				|| comision.getAlumnos().contains(alumno)) {
 			return false;
 		}
-
-		comision.getAlumnos().add(alumno);
-		return true;
-		*/
-		
-		if(!tieneTodasLasCorrelativasAprobadas(comision, alumno) || !hayCupoEnAula(comision) || estaInscritoEnOtraComisionMismoDiaTurno(comision, alumno) || alumno.getMateriasAprobadas().contains(comision.getMateria())) {
-			return false;
-		}
-
 		comision.getAlumnos().add(alumno);
 		return true;
 	}
 
 	private boolean esFechaDeInscripcionValida(Comision comision, LocalDate fechaInscripcionActual) {
-		return comision.getCicloLectivo().getFechaInicioInscripcion().isBefore(fechaInscripcionActual) && comision.getCicloLectivo().getFechaFinalizacionInscripcion().isAfter(fechaInscripcionActual);
+		if (comision.getCicloLectivo().getFechaInicioInscripcion().isBefore(fechaInscripcionActual)
+				&& comision.getCicloLectivo().getFechaFinalizacionInscripcion().isAfter(fechaInscripcionActual)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	private boolean tieneTodasLasCorrelativasAprobadas(Comision comision, Alumno alumno) {
@@ -275,6 +268,31 @@ public class Universidad {
 
 	public void setAulas(Set<Aula> aulas) {
 		this.aulas = aulas;
+	}
+
+	public boolean agregarAula(Aula aula) {
+		return aulas.add(aula);
+	}
+
+	public boolean asignarAulaAlaComision(Integer idComision, Integer idAula) {
+		Comision comision = buscarComisionPorId(idComision);
+		Aula aula = buscarAulaPorId(idAula);
+
+		if (comision.getAula().equals(aula)) {
+			return false;
+		}
+
+		comision.setAula(aula);
+		return true;
+	}
+
+	private Aula buscarAulaPorId(Integer idAula) {
+		for (Aula aula : aulas) {
+			if (aula.getId().equals(idAula)) {
+				return aula;
+			}
+		}
+		return null;
 	}
 
 }

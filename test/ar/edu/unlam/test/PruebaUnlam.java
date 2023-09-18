@@ -99,7 +99,7 @@ public class PruebaUnlam {
         LocalDate fechaInicio = LocalDate.of(2022,4, 1);
         LocalDate fechaFinalizacion = LocalDate.of(2023,12,31);
         LocalDate fechaInicioInscripcion = LocalDate.of(2022,4, 1);
-        LocalDate fechaFinalizacionInscripcion = LocalDate.of(2022,4, 1);
+        LocalDate fechaFinalizacionInscripcion = LocalDate.of(2022,12, 31);
         CicloLectivo ciclo = new CicloLectivo(id, fechaInicio, fechaFinalizacion, fechaInicioInscripcion, fechaFinalizacionInscripcion);
         Aula aula = new Aula(1, 60);
         Comision comision = new Comision(1, materia, ciclo, "Mañana", "MieJue", aula);
@@ -115,10 +115,10 @@ public class PruebaUnlam {
         
 	    assertTrue(universidad.agregarAlumno(alumno));
 	    assertTrue(universidad.agregarCicloLectivo(ciclo));
+	    assertTrue(universidad.agregarComision(comision));
 	    assertTrue(universidad.inscribirAlumnoAComision(dni, id, fechaInscripcionAlumnoAMateria));
         assertTrue(universidad.agregarDocente(profesor1));
         assertTrue(universidad.agregarDocente(profesor2));
-        assertTrue(universidad.agregarComision(comision));
         
         assertTrue(universidad.asignarDocentesAComision(comision.getId(), profesor1.getDni()));
         assertFalse(universidad.asignarDocentesAComision(comision.getId(), profesor1.getDni())); // El mismo docente no puede ser profesor de la misma comisión 2 veces
@@ -160,7 +160,7 @@ public class PruebaUnlam {
         LocalDate fechaInicio = LocalDate.of(2022,4, 1);
         LocalDate fechaFinalizacion = LocalDate.of(2023,12,31);
         LocalDate fechaInicioInscripcion = LocalDate.of(2022,4, 1);
-        LocalDate fechaFinalizacionInscripcion = LocalDate.of(2022,4, 1);
+        LocalDate fechaFinalizacionInscripcion = LocalDate.of(2022,12, 31);
         CicloLectivo ciclo = new CicloLectivo(id, fechaInicio, fechaFinalizacion, fechaInicioInscripcion, fechaFinalizacionInscripcion);
         // Aula
         Aula aula = new Aula(1, 60);
@@ -186,29 +186,18 @@ public class PruebaUnlam {
     }
 
     @Test
-    public void asignarProfesorAlaComision() {
-        Universidad universidad = new Universidad();
-        Docente profesor = new Docente(1001, "Ana", "Gómez");
-        Materia materia = new Materia(1, "Matemáticas");
-        CicloLectivo ciclo = new CicloLectivo(2023, new Date(), new Date(), new Date(), new Date());
-        Comision comision = new Comision(1, materia, ciclo, "Mañana");
-        
-        assertTrue(universidad.agregarMateria(materia));
-        assertTrue(universidad.agregarCicloLectivo(ciclo));
-        assertTrue(universidad.agregarComision(comision));
-        assertTrue(universidad.agregarDocente(profesor));
-        
-        assertTrue(universidad.asignarProfesorAlaComision(comision.getId(), profesor.getDni()));
-        assertFalse(universidad.asignarProfesorAlaComision(comision.getId(), profesor.getDni())); // No se puede asignar al mismo profesor dos veces
-    }
-    @Test
     public void asignarAulaAlaComision() {
         Universidad universidad = new Universidad();
         Docente profesor = new Docente(1001, "Ana", "Gómez");
         Materia materia = new Materia(1, "Matemáticas");
-        CicloLectivo ciclo = new CicloLectivo(2023, new Date(), new Date(), new Date(), new Date());
-        Comision comision = new Comision(1, materia, ciclo, "Mañana");
-        Aula aula = new Aula(101, 30); // Una aula con capacidad para 30 alumnos
+        Integer id = 01;
+        LocalDate fechaInicio = LocalDate.of(2022,4, 1);
+        LocalDate fechaFinalizacion = LocalDate.of(2023,12,31);
+        LocalDate fechaInicioInscripcion = LocalDate.of(2022,4, 1);
+        LocalDate fechaFinalizacionInscripcion = LocalDate.of(2022,12, 31);
+        CicloLectivo ciclo = new CicloLectivo(id, fechaInicio, fechaFinalizacion, fechaInicioInscripcion, fechaFinalizacionInscripcion);
+        Aula aula = new Aula(1, 60);
+        Comision comision = new Comision(1, materia, ciclo, "Mañana", "MieJue", aula);
         
         assertTrue(universidad.agregarMateria(materia));
         assertTrue(universidad.agregarCicloLectivo(ciclo));
