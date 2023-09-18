@@ -1,7 +1,6 @@
 package ar.edu.unlam.dominio;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.Objects;
 
 public class CicloLectivo {
@@ -64,7 +63,7 @@ public class CicloLectivo {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id);
+		return Objects.hash(fechaFinalizacion, fechaFinalizacionInscripcion, fechaInicio, fechaInicioInscripcion, id);
 	}
 
 	@Override
@@ -76,8 +75,10 @@ public class CicloLectivo {
 		if (getClass() != obj.getClass())
 			return false;
 		CicloLectivo other = (CicloLectivo) obj;
-		return Objects.equals(id, other.id);
+		return Objects.equals(fechaFinalizacion, other.fechaFinalizacion)
+				&& Objects.equals(fechaFinalizacionInscripcion, other.fechaFinalizacionInscripcion)
+				&& Objects.equals(fechaInicio, other.fechaInicio)
+				&& Objects.equals(fechaInicioInscripcion, other.fechaInicioInscripcion) && Objects.equals(id, other.id);
 	}
-    
     
 }
