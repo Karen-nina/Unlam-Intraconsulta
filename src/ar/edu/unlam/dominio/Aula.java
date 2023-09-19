@@ -5,29 +5,35 @@ import java.util.Objects;
 public class Aula {
 
 	private Integer id;
-    private Integer capacidadMaxima;
-    
+	private Integer capacidadMaxima;
+
 	public Aula(Integer id, Integer capacidadMaxima) {
 		super();
 		this.id = id;
 		this.capacidadMaxima = capacidadMaxima;
 	}
+
 	public Integer getId() {
 		return id;
 	}
+
 	public void setId(Integer id) {
 		this.id = id;
 	}
+
 	public Integer getCapacidadMaxima() {
 		return capacidadMaxima;
 	}
+
 	public void setCapacidadMaxima(Integer capacidadMaxima) {
 		this.capacidadMaxima = capacidadMaxima;
 	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -40,5 +46,4 @@ public class Aula {
 		return Objects.equals(id, other.id);
 	}
 
-    
 }

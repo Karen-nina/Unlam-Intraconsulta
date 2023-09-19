@@ -4,7 +4,7 @@ public class Nota {
 
 	private Double valor;
 	private TipoDeNota tipo;
-	
+
 	public Nota(Double valor, TipoDeNota tipo) {
 		super();
 		this.valor = valor;
@@ -26,7 +26,5 @@ public class Nota {
 	public void setTipo(TipoDeNota tipo) {
 		this.tipo = tipo;
 	}
-	
-	
-	
+
 }
