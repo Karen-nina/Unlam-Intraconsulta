@@ -1,4 +1,5 @@
 package ar.edu.unlam.dominio;
+
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -6,9 +7,9 @@ import java.util.Set;
 public class Materia {
 
 	private Integer id;
-    private String nombre;
-    private Set<Integer> correlatividades;
-    
+	private String nombre;
+	private Set<Integer> correlatividades;
+
 	public Materia(Integer id, String nombre) {
 		super();
 		this.id = id;
@@ -56,5 +57,5 @@ public class Materia {
 		Materia other = (Materia) obj;
 		return Objects.equals(id, other.id);
 	}
-	
+
 }

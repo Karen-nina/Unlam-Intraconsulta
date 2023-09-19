@@ -5,90 +5,88 @@ import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public class Alumno{
-    
-	 	private Integer dni;
-	    private String nombre;
-	    private String apellido;
-	    private LocalDate fechaNacimiento;
-	    private LocalDate fechaIngreso;
-	    private Set<Materia> materiasAprobadas;
-	    
-		public Alumno(Integer dni, String nombre, String apellido, LocalDate fechaNacimiento, LocalDate fechaIngreso) {
-			super();
-			this.dni = dni;
-			this.nombre = nombre;
-			this.apellido = apellido;
-			this.fechaNacimiento = fechaNacimiento;
-			this.fechaIngreso = fechaIngreso;
-			this.materiasAprobadas = new HashSet<>();
-		}
+public class Alumno {
 
-		public Integer getDni() {
-			return dni;
-		}
+	private Integer dni;
+	private String nombre;
+	private String apellido;
+	private LocalDate fechaNacimiento;
+	private LocalDate fechaIngreso;
+	private Set<Materia> materiasAprobadas;
 
-		public void setDni(Integer dni) {
-			this.dni = dni;
-		}
+	public Alumno(Integer dni, String nombre, String apellido, LocalDate fechaNacimiento, LocalDate fechaIngreso) {
+		super();
+		this.dni = dni;
+		this.nombre = nombre;
+		this.apellido = apellido;
+		this.fechaNacimiento = fechaNacimiento;
+		this.fechaIngreso = fechaIngreso;
+		this.materiasAprobadas = new HashSet<>();
+	}
 
-		public String getNombre() {
-			return nombre;
-		}
+	public Integer getDni() {
+		return dni;
+	}
 
-		public void setNombre(String nombre) {
-			this.nombre = nombre;
-		}
+	public void setDni(Integer dni) {
+		this.dni = dni;
+	}
 
-		public String getApellido() {
-			return apellido;
-		}
+	public String getNombre() {
+		return nombre;
+	}
 
-		public void setApellido(String apellido) {
-			this.apellido = apellido;
-		}
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
 
-		
-		public LocalDate getFechaNacimiento() {
-			return fechaNacimiento;
-		}
+	public String getApellido() {
+		return apellido;
+	}
 
-		public void setFechaNacimiento(LocalDate fechaNacimiento) {
-			this.fechaNacimiento = fechaNacimiento;
-		}
+	public void setApellido(String apellido) {
+		this.apellido = apellido;
+	}
 
-		public LocalDate getFechaIngreso() {
-			return fechaIngreso;
-		}
+	public LocalDate getFechaNacimiento() {
+		return fechaNacimiento;
+	}
 
-		public void setFechaIngreso(LocalDate fechaIngreso) {
-			this.fechaIngreso = fechaIngreso;
-		}
+	public void setFechaNacimiento(LocalDate fechaNacimiento) {
+		this.fechaNacimiento = fechaNacimiento;
+	}
 
-		public Set<Materia> getMateriasAprobadas() {
-			return materiasAprobadas;
-		}
+	public LocalDate getFechaIngreso() {
+		return fechaIngreso;
+	}
 
-		public void setMateriasAprobadas(Set<Materia> materiasAprobadas) {
-			this.materiasAprobadas = materiasAprobadas;
-		}
+	public void setFechaIngreso(LocalDate fechaIngreso) {
+		this.fechaIngreso = fechaIngreso;
+	}
 
-		@Override
-		public int hashCode() {
-			return Objects.hash(dni);
-		}
+	public Set<Materia> getMateriasAprobadas() {
+		return materiasAprobadas;
+	}
 
-		@Override
-		public boolean equals(Object obj) {
-			if (this == obj)
-				return true;
-			if (obj == null)
-				return false;
-			if (getClass() != obj.getClass())
-				return false;
-			Alumno other = (Alumno) obj;
-			return Objects.equals(dni, other.dni);
-		}
-	
-    
+	public void setMateriasAprobadas(Set<Materia> materiasAprobadas) {
+		this.materiasAprobadas = materiasAprobadas;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(dni);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Alumno other = (Alumno) obj;
+		return Objects.equals(dni, other.dni);
+	}
+
 }
