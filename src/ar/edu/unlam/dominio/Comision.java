@@ -145,5 +145,26 @@ public class Comision {
 		}
 		return null;
 	}
+	
+	public Integer cantidadDeNotasPorAlumno(Alumno alumno) {
+		Integer cantidadNotas = 0;
+		for(Examen examenes : examenes) {
+			if(examenes.getAlumno().equals(alumno)) {
+				cantidadNotas = cantidadNotas + 1;
+			}
+		}
+		return cantidadNotas;
+	}
+
+	public Double calcularPromedioNotas(Alumno alumno) {
+		Integer cantidadDeNotas = cantidadDeNotasPorAlumno(alumno);
+		Double sumaDeNotas = 0.00;
+		for(Examen examenes : examenes) {
+			if(examenes.getAlumno().equals(alumno)) {
+				sumaDeNotas = sumaDeNotas + examenes.getNota().getValor();
+			}
+		}
+		return sumaDeNotas / cantidadDeNotas;
+	}
 
 }

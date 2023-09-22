@@ -382,4 +382,11 @@ public class Universidad {
 		return false;
 	}
 
+	public Double calcularPromedioDeNotas(Integer idComision, Integer idAlumno) {
+		Comision comision = buscarComisionPorId(idComision);
+		Alumno alumno = buscarAlumnoPorDni(idAlumno);
+		Double promedio = comision.calcularPromedioNotas(alumno);
+		return promedio;
+	}
+
 }
