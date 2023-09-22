@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class Universidad {
@@ -15,8 +14,6 @@ public class Universidad {
 	private Set<CicloLectivo> ciclosLectivos;
 	private Set<Comision> comisiones;
 	private Set<Aula> aulas;
-	private TipoDeNota tipoDeNota;
-	private List<HistorialAcademico> historialAcademico;
 
 	public Universidad() {
 		materias = new ArrayList<>();
@@ -25,7 +22,6 @@ public class Universidad {
 		ciclosLectivos = new HashSet<>();
 		comisiones = new HashSet<>();
 		aulas = new HashSet<>();
-		historialAcademico = new ArrayList<>();
 	}
 
 	public boolean agregarMateria(Materia materia) {
@@ -108,36 +104,6 @@ public class Universidad {
 		return false;
 	}
 
-	/*
-	 * public Boolean registrarNota(Integer idComision, Integer dniAlumno, Nota
-	 * nota) { Comision comision = buscarComisionPorId(idComision); Alumno alumno =
-	 * buscarAlumnoPorDni(dniAlumno);
-	 * 
-	 * if (nota.getValor() >= 1 && nota.getValor() <= 10) { if
-	 * (comision.getAlumnos().contains(alumno) && tipoNotaValido(nota) &&
-	 * notaValidaParaFinal(nota, comision, alumno) &&
-	 * recibeNotaMayorASieteConCorrelativasAprobadas(nota, comision, alumno)) {
-	 * comision.getRegistroNotas().put(alumno, nota); return true; } } return false;
-	 * }
-	 */
-	private boolean tipoNotaValido(Nota nota) {
-		return nota.getTipo().equals(TipoDeNota.PRIMER_PARCIAL) || nota.getTipo().equals(TipoDeNota.SEGUNDO_PARCIAL)
-				|| nota.getTipo().equals(TipoDeNota.RECUPERACION_PRIMER_PARCIAL)
-				|| nota.getTipo().equals(TipoDeNota.RECUPERACION_SEGUNDO_PARCIAL)
-				|| nota.getTipo().equals(TipoDeNota.FINAL);
-	}
-
-	private boolean notaValidaParaFinal(Nota nota, Comision comision, Alumno alumno) {
-		if (nota.getTipo().equals(TipoDeNota.FINAL) && nota.getValor() >= 4) {
-			for (Materia correlativa : alumno.getMateriasAprobadas()) {
-				if (!comision.getMateria().getCorrelatividades().contains(correlativa.getId())) {
-					return false;
-				}
-			}
-		}
-		return true;
-	}
-
 	private Boolean correlativasAprobadas(Comision comision, Alumno alumno) {
 		for (Materia correlativa : alumno.getMateriasAprobadas()) {
 			if (!comision.getMateria().getCorrelatividades().contains(correlativa.getId())) {
@@ -147,7 +113,7 @@ public class Universidad {
 		return true;
 	}
 
-	private Boolean recibeNotaMayorASieteConCorrelativasAprobadas(Nota nota, Comision comision, Alumno alumno) {
+	private Boolean recibeNotaMayorASieteConCorrelativasAprobadas(Comision comision, Alumno alumno, Nota nota) {
 		if (nota.getValor() >= 7 && !correlativasAprobadas(comision, alumno)) {
 			return false;
 		}
@@ -178,7 +144,7 @@ public class Universidad {
 		return false;
 	}
 
-	private boolean tieneTodasLasCorrelativasAprobadas(Comision comision, Alumno alumno) {
+	public Boolean tieneTodasLasCorrelativasAprobadas(Comision comision, Alumno alumno) {
 		Set<Integer> correlativas = comision.getMateria().getCorrelatividades();
 
 		for (Integer correlativaId : correlativas) {
@@ -194,7 +160,7 @@ public class Universidad {
 		return comision.getAlumnos().size() < comision.getAula().getCapacidadMaxima();
 	}
 
-	private boolean estaInscritoEnOtraComisionMismoDiaTurno(Comision comision, Alumno alumno) {
+	public Boolean estaInscritoEnOtraComisionMismoDiaTurno(Comision comision, Alumno alumno) {
 		for (Comision otraComision : comisiones) {
 			if (otraComision != comision && otraComision.getCicloLectivo().equals(comision.getCicloLectivo())
 					&& otraComision.getTurno().equals(comision.getTurno())) {
@@ -315,52 +281,112 @@ public class Universidad {
 		return null;
 	}
 
-	public TipoDeNota getTipoDeNota() {
-		return tipoDeNota;
-	}
-
-	public void setTipoDeNota(TipoDeNota tipoDeNota) {
-		this.tipoDeNota = tipoDeNota;
-	}
-
 	public Boolean registrarNota(Integer idComision, Integer idAlumno, Nota nota) {
 		Comision comision = buscarComisionPorId(idComision);
 		Alumno alumno = buscarAlumnoPorDni(idAlumno);
-		if(nota.getValor()< 0 || nota.getValor() > 10) {
+		
+		if (nota.getValor() < 0 || nota.getValor() > 10) {
 			return false;
 		}
-		HistorialAcademico registro = new HistorialAcademico(alumno, comision, nota);
-		return historialAcademico.add(registro);
-	}
-
-	public Double obtenerNota(Integer dniAlumno, Materia materia) {
-		Double nota = 0.00;
-		for (HistorialAcademico registros : historialAcademico) {
-			if (registros.getAlumno().getDni().equals(dniAlumno)
-					&& registros.getComision().getMateria().equals(materia)) {
-				nota = registros.getNota().getValor();
-				return nota;
-			}
+		if (!recibeNotaMayorASieteConCorrelativasAprobadas(comision, alumno, nota)) {
+			return false;
 		}
-		return nota;
+		Examen examen = new Examen(alumno, nota);
+		return comision.registrarExamen(examen);
 	}
 
-	public Boolean aprobarMateria(Integer idComision, Integer dniAlumno, Nota nota) {
+	public Double obtenerNota(Integer idComision, Integer idAlumno, TipoDeNota tipoDeNota) {
 		Comision comision = buscarComisionPorId(idComision);
-		Alumno alumno = buscarAlumnoPorDni(dniAlumno);
-		
-		if(!verificarAproboFinal()) {
-			return false;
-		}
-		if(!verificarAproboUnParcialYUnRecuperatorio()) {
-			return false;
-		}
-		if(!verificarAproboAmbosParciales()) {
-			return false;
-		}
-		
-		return alumno.getMateriasAprobadas().add(comision.getMateria());
+		Alumno alumno = buscarAlumnoPorDni(idAlumno);
+		return comision.buscarNota(alumno, tipoDeNota);
 	}
 
+	public Boolean aprobarMateria(Integer idComision, Integer idAlumno, Nota nota) {
+		Comision comision = buscarComisionPorId(idComision);
+		Alumno alumno = buscarAlumnoPorDni(idAlumno);
+		
+
+		if(verificarAlumnoAproboFinal(idComision, idAlumno)) {
+			alumno.agregarMateriaAprobada(comision.getMateria());
+			return true;
+		}
+		
+		if(verificarAlumnoPromociono(idComision, idAlumno)) {
+			alumno.agregarMateriaAprobada(comision.getMateria());
+			return true;
+		}
+		return false;
+	}
+
+	public Boolean verificarAlumnoPromociono(Integer idComision, Integer idAlumno) {
+		Comision comision = buscarComisionPorId(idComision);
+		Alumno alumno = buscarAlumnoPorDni(idAlumno);
+		Examen primerParcial = comision.buscarExamenPorTipoDeNota(alumno, TipoDeNota.PRIMER_PARCIAL);
+		Examen segundoParcial = comision.buscarExamenPorTipoDeNota(alumno, TipoDeNota.SEGUNDO_PARCIAL);
+		
+		if(primerParcial == null || segundoParcial == null) {
+			return false;
+		}
+		if (primerParcial.getNota().getValor() >= 7 && segundoParcial.getNota().getValor() >= 7) {
+			return true;
+		}
+		if (verificarAlumnoPromocionaPrimerParcialYRecuperatorioDelSegundoParcial(idComision, idAlumno)) {
+			return true;
+		}
+		if (verificarAlumnoPromocionaSegundoParcialYRecuperatorioDelPrimerParcial(idComision, idAlumno)) {
+			return true;
+		}
+		return false;
+	}
 	
+	public Boolean verificarAlumnoPromocionaPrimerParcialYRecuperatorioDelSegundoParcial(Integer idComision, Integer idAlumno) {
+		Comision comision = buscarComisionPorId(idComision);
+		Alumno alumno = buscarAlumnoPorDni(idAlumno);
+		Examen primerParcial = comision.buscarExamenPorTipoDeNota(alumno, TipoDeNota.PRIMER_PARCIAL);
+		Examen recuperatorioSegundoParcial = comision.buscarExamenPorTipoDeNota(alumno, TipoDeNota.RECUPERATORIO_SEGUNDO_PARCIAL);
+		
+		if(recuperatorioSegundoParcial == null) {
+			return false;
+		}
+		if (primerParcial.getNota().getValor() >= 7 && recuperatorioSegundoParcial.getNota().getValor() >= 7) {
+			return true;
+		}
+		return false;
+	}
+	
+	public Boolean verificarAlumnoPromocionaSegundoParcialYRecuperatorioDelPrimerParcial(Integer idComision, Integer idAlumno) {
+		Comision comision = buscarComisionPorId(idComision);
+		Alumno alumno = buscarAlumnoPorDni(idAlumno);
+		Examen segundoParcial = comision.buscarExamenPorTipoDeNota(alumno, TipoDeNota.SEGUNDO_PARCIAL);
+		Examen recuperatorioPrimerParcial = comision.buscarExamenPorTipoDeNota(alumno, TipoDeNota.RECUPERATORIO_PRIMER_PARCIAL);
+		
+		if(recuperatorioPrimerParcial == null) {
+			return false;
+		}
+		if (segundoParcial.getNota().getValor() >= 7 && recuperatorioPrimerParcial.getNota().getValor() >= 7) {
+			return true;
+		}
+		return false;
+	}
+
+	public Boolean verificarAlumnoAproboFinal(Integer idComision, Integer idAlumno) {
+		Comision comision = buscarComisionPorId(idComision);
+		Alumno alumno = buscarAlumnoPorDni(idAlumno);
+		Examen examen = comision.buscarExamenPorTipoDeNota(alumno, TipoDeNota.FINAL);
+		if (examen == null) {
+			return false;
+		}
+		if (examen.getNota().getValor() >= 4) {
+			return true;
+		}
+		return false;
+	}
+
+	public Double calcularPromedioDeNotas(Integer idComision, Integer idAlumno) {
+		Comision comision = buscarComisionPorId(idComision);
+		Alumno alumno = buscarAlumnoPorDni(idAlumno);
+		Double promedio = comision.calcularPromedioNotas(alumno);
+		return promedio;
+	}
+
 }

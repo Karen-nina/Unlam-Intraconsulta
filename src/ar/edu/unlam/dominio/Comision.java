@@ -1,8 +1,8 @@
 package ar.edu.unlam.dominio;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Map;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -16,7 +16,7 @@ public class Comision {
 	private Aula aula;
 	private Set<Docente> docentes;
 	private Set<Alumno> alumnos;
-	private Map<Alumno, Nota> registroNotas;
+	private List<Examen> examenes;
 
 	public Comision(Integer id, Materia materia, CicloLectivo cicloLectivo, String turno, String dia, Aula aula) {
 		super();
@@ -28,7 +28,7 @@ public class Comision {
 		this.aula = aula;
 		this.docentes = new HashSet<>();
 		this.alumnos = new HashSet<>();
-		this.registroNotas = new HashMap<>();
+		this.examenes = new ArrayList<>();
 	}
 
 	public Comision(Integer id, Materia materia, CicloLectivo cicloLectivo, String turno, String dia) {
@@ -39,7 +39,6 @@ public class Comision {
 		this.dia = dia;
 		this.docentes = new HashSet<>();
 		this.alumnos = new HashSet<>();
-		this.registroNotas = new HashMap<>();
 	}
 
 	public Integer getId() {
@@ -106,14 +105,6 @@ public class Comision {
 		this.alumnos = alumnos;
 	}
 
-	public Map<Alumno, Nota> getRegistroNotas() {
-		return registroNotas;
-	}
-
-	public void setRegistroNotas(Map<Alumno, Nota> registroNotas) {
-		this.registroNotas = registroNotas;
-	}
-
 	@Override
 	public int hashCode() {
 		return Objects.hash(id);
@@ -129,6 +120,51 @@ public class Comision {
 			return false;
 		Comision other = (Comision) obj;
 		return Objects.equals(id, other.id);
+	}
+
+	public Boolean registrarExamen(Examen examen) {
+		return examenes.add(examen);
+	}
+
+	public Double buscarNota(Alumno alumno, TipoDeNota tipoDeNota) {
+		Double nota = 0.00;
+		for(Examen examen : examenes) {
+			if(examen.getAlumno().equals(alumno) && examen.getNota().getTipo().equals(tipoDeNota)) {
+				nota = examen.getNota().getValor();
+				return nota;
+			}
+		}
+		return nota;
+	}
+
+	public Examen buscarExamenPorTipoDeNota(Alumno alumno, TipoDeNota tipoDeNota) {
+		for(Examen examen : examenes) {
+			if(examen.getAlumno().equals(alumno) && examen.getNota().getTipo().equals(tipoDeNota)) {
+				return examen;
+			}
+		}
+		return null;
+	}
+	
+	public Integer cantidadDeNotasPorAlumno(Alumno alumno) {
+		Integer cantidadNotas = 0;
+		for(Examen examenes : examenes) {
+			if(examenes.getAlumno().equals(alumno)) {
+				cantidadNotas = cantidadNotas + 1;
+			}
+		}
+		return cantidadNotas;
+	}
+
+	public Double calcularPromedioNotas(Alumno alumno) {
+		Integer cantidadDeNotas = cantidadDeNotasPorAlumno(alumno);
+		Double sumaDeNotas = 0.00;
+		for(Examen examenes : examenes) {
+			if(examenes.getAlumno().equals(alumno)) {
+				sumaDeNotas = sumaDeNotas + examenes.getNota().getValor();
+			}
+		}
+		return sumaDeNotas / cantidadDeNotas;
 	}
 
 }

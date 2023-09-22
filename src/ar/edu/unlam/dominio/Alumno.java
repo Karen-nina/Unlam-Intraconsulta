@@ -89,4 +89,8 @@ public class Alumno {
 		return Objects.equals(dni, other.dni);
 	}
 
+	public Boolean agregarMateriaAprobada(Materia materia) {
+		return materiasAprobadas.add(materia);
+	}
+
 }
