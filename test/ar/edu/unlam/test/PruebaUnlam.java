@@ -3,9 +3,6 @@ package ar.edu.unlam.test;
 import static org.junit.Assert.*;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.Set;
-
 import org.junit.Test;
 import ar.edu.unlam.dominio.Alumno;
 import ar.edu.unlam.dominio.Aula;
@@ -229,7 +226,7 @@ public class PruebaUnlam {
 		// assertFalse(universidad.asignarAulaAlaComision(comision.getId(),
 		// aula.getId())); // No se puede asignar el mismo aula dos veces
 	}
-
+/*
 	@Test
 	public void registrarNota() {
 		Universidad universidad = new Universidad();
@@ -270,7 +267,48 @@ public class PruebaUnlam {
 
 		assertTrue(universidad.registrarNota(comision.getId(), alumno.getDni(), nota)); // Registrar una nota válida
 	}
+*/
+	@Test
+	public void registrarNota() {
+		Universidad universidad = new Universidad();
+		Materia materia = new Materia(1, "Matemáticas");
+		// CicloLectivo
+		Integer id = 01;
+		LocalDate fechaInicio = LocalDate.of(2022, 4, 1);
+		LocalDate fechaFinalizacion = LocalDate.of(2023, 12, 31);
+		LocalDate fechaInicioInscripcion = LocalDate.of(2022, 4, 1);
+		LocalDate fechaFinalizacionInscripcion = LocalDate.of(2022, 12, 31);
+		CicloLectivo ciclo = new CicloLectivo(id, fechaInicio, fechaFinalizacion, fechaInicioInscripcion,
+				fechaFinalizacionInscripcion);
+		// Aula
+		Aula aula = new Aula(1, 60);
+		// Comision
+		Comision comision = new Comision(1, materia, ciclo, "Mañana", "MieJue", aula);
+		// Alumno
+		Integer dni = 21351;
+		String nombre = "Matias";
+		String apellido = "Guarnieri";
+		LocalDate fechaNacimiento = LocalDate.of(1997, 8, 6);
+		LocalDate fechaIngreso = LocalDate.of(2022, 4, 10);
+		Alumno alumno = new Alumno(dni, nombre, apellido, fechaNacimiento, fechaIngreso);
+		// Fecha inscripcion del alumno
+		LocalDate fechaInscripcionAlumnoAMateria = LocalDate.of(2022, 4, 2);
+		// Nota
+		Double valorNota = 8.00;
+		TipoDeNota tipoNota = TipoDeNota.PRIMER_PARCIAL;
+		Nota nota = new Nota(valorNota, tipoNota);
 
+		assertTrue(universidad.agregarMateria(materia));
+		assertTrue(universidad.agregarCicloLectivo(ciclo));
+		assertTrue(universidad.agregarComision(comision));
+		assertTrue(universidad.agregarAlumno(alumno));
+
+		assertTrue(universidad.inscribirAlumnoAComision(alumno.getDni(), comision.getId(),
+				fechaInscripcionAlumnoAMateria));
+
+		assertTrue(universidad.registrarNota(comision.getId(), alumno.getDni(), nota)); // Registrar una nota válida
+	}
+	
 	@Test
 	public void queNoSePuedaRegistrarNotaMenorAUno() {
 		Universidad universidad = new Universidad();
@@ -354,9 +392,10 @@ public class PruebaUnlam {
 	}
 	
 	@Test
-	public void queSePuedaAprobarUnaMateria() {
+	public void queSePuedaObtenerUnaNota() {
 		Universidad universidad = new Universidad();
-		Materia materia = new Materia(1, "Matemáticas");
+		Integer idMateria = 1;
+		Materia materia = new Materia(idMateria, "Matemáticas");
 		// CicloLectivo
 		Integer id = 01;
 		LocalDate fechaInicio = LocalDate.of(2022, 4, 1);
@@ -390,8 +429,107 @@ public class PruebaUnlam {
 		assertTrue(universidad.inscribirAlumnoAComision(alumno.getDni(), comision.getId(),
 				fechaInscripcionAlumnoAMateria));
 		assertTrue(universidad.registrarNota(comision.getId(), alumno.getDni(), nota));
-		
+
+		Double valorResultante = universidad.obtenerNota(comision.getId(), dni, tipoNota);
+		assertEquals(8.00, valorResultante, 0.001);
+	}
+
+	@Test
+	public void queSePuedaAprobarUnaMateria() {
+		Universidad universidad = new Universidad();
+		Materia materia = new Materia(1, "Matemáticas");
+		// CicloLectivo
+		Integer id = 01;
+		LocalDate fechaInicio = LocalDate.of(2022, 4, 1);
+		LocalDate fechaFinalizacion = LocalDate.of(2023, 12, 31);
+		LocalDate fechaInicioInscripcion = LocalDate.of(2022, 4, 1);
+		LocalDate fechaFinalizacionInscripcion = LocalDate.of(2022, 12, 31);
+		CicloLectivo ciclo = new CicloLectivo(id, fechaInicio, fechaFinalizacion, fechaInicioInscripcion,
+				fechaFinalizacionInscripcion);
+		// Aula
+		Aula aula = new Aula(1, 60);
+		// Comision
+		Comision comision = new Comision(1, materia, ciclo, "Mañana", "MieJue", aula);
+		// Alumno
+		Integer dni = 21351;
+		String nombre = "Matias";
+		String apellido = "Guarnieri";
+		LocalDate fechaNacimiento = LocalDate.of(1997, 8, 6);
+		LocalDate fechaIngreso = LocalDate.of(2022, 4, 10);
+		Alumno alumno = new Alumno(dni, nombre, apellido, fechaNacimiento, fechaIngreso);
+		// Fecha inscripcion del alumno
+		LocalDate fechaInscripcionAlumnoAMateria = LocalDate.of(2022, 4, 2);
+		// Nota
+		Double valorNota = 8.00;
+		TipoDeNota tipoNota = TipoDeNota.FINAL;
+		Nota nota = new Nota(valorNota, tipoNota);
+
+		assertTrue(universidad.agregarMateria(materia));
+		assertTrue(universidad.agregarCicloLectivo(ciclo));
+		assertTrue(universidad.agregarComision(comision));
+		assertTrue(universidad.agregarAlumno(alumno));
+		assertTrue(universidad.inscribirAlumnoAComision(alumno.getDni(), comision.getId(),
+				fechaInscripcionAlumnoAMateria));
+		assertTrue(universidad.registrarNota(comision.getId(), alumno.getDni(), nota));
+
 		assertTrue(universidad.aprobarMateria(comision.getId(), alumno.getDni(), nota));
+	}
+	
+	@Test
+	public void queSePuedaComprobarSiLaMateriaCorrelativaEstaAprobada() {
+		Universidad universidad = new Universidad();
+		Materia materia1 = new Materia(1, "Matemáticas");
+		Materia materia2 = new Materia(2, "Física");
+		// CicloLectivo
+		Integer idCiloUno = 01;
+		LocalDate fechaInicioCiloUno = LocalDate.of(2022, 4, 1);
+		LocalDate fechaFinalizacionCiloUno = LocalDate.of(2023, 12, 31);
+		LocalDate fechaInicioInscripcionCiloUno = LocalDate.of(2022, 4, 1);
+		LocalDate fechaFinalizacionInscripcionCiloUno = LocalDate.of(2022, 12, 31);
+		CicloLectivo ciclo1 = new CicloLectivo(idCiloUno, fechaInicioCiloUno, fechaFinalizacionCiloUno,
+				fechaInicioInscripcionCiloUno, fechaFinalizacionInscripcionCiloUno);
+
+		Integer idCicloDos = 01;
+		LocalDate fechaInicioCicloDos = LocalDate.of(2025, 4, 1);
+		LocalDate fechaFinalizacionCicloDos = LocalDate.of(2025, 12, 31);
+		LocalDate fechaInicioInscripcionCicloDos = LocalDate.of(2025, 4, 1);
+		LocalDate fechaFinalizacionInscripcionCicloDos = LocalDate.of(2025, 12, 31);
+		CicloLectivo ciclo2 = new CicloLectivo(idCicloDos, fechaInicioCicloDos, fechaFinalizacionCicloDos,
+				fechaInicioInscripcionCicloDos, fechaFinalizacionInscripcionCicloDos);
+		// Aula
+		Aula aula1 = new Aula(1, 60);
+		Aula aula2 = new Aula(2, 60);
+		// Comision
+		Comision comision1 = new Comision(1, materia1, ciclo1, "Mañana", "MieJue", aula1);
+		Comision comision2 = new Comision(2, materia2, ciclo2, "Tarde", "Mar", aula2);
+		// Alumno
+		Integer dni = 21351;
+		String nombre = "Matias";
+		String apellido = "Guarnieri";
+		LocalDate fechaNacimiento = LocalDate.of(1997, 8, 6);
+		LocalDate fechaIngreso = LocalDate.of(2022, 4, 10);
+		Alumno alumno = new Alumno(dni, nombre, apellido, fechaNacimiento, fechaIngreso);
+		// Fecha inscripcion del alumno
+		LocalDate fechaInscripcionAlumnoAMateriaUno = LocalDate.of(2022, 4, 2);
+		// Nota
+		Double valorNota1 = 10.00;
+		TipoDeNota tipoNota1 = TipoDeNota.FINAL;
+		Nota nota1 = new Nota(valorNota1, tipoNota1);
+
+		assertTrue(universidad.agregarMateria(materia1));
+		assertTrue(universidad.agregarMateria(materia2));
+		assertTrue(universidad.agregarCicloLectivo(ciclo1));
+		assertTrue(universidad.agregarCicloLectivo(ciclo2));
+		assertTrue(universidad.agregarComision(comision1));
+		assertTrue(universidad.agregarComision(comision2));
+		assertTrue(universidad.agregarAlumno(alumno));
+		assertTrue(universidad.agregarCorrelatividad(materia2.getId(), materia1.getId()));
+		assertTrue(universidad.inscribirAlumnoAComision(alumno.getDni(), comision1.getId(),
+				fechaInscripcionAlumnoAMateriaUno));
+		assertTrue(universidad.registrarNota(comision1.getId(), alumno.getDni(), nota1));
+		assertTrue(universidad.aprobarMateria(comision1.getId(), dni, nota1));
+		
+		assertTrue(universidad.tieneTodasLasCorrelativasAprobadas(comision2, alumno));
 	}
 
 	@Test
@@ -433,7 +571,7 @@ public class PruebaUnlam {
 		LocalDate fechaInscripcionAlumnoAMateriaDos = LocalDate.of(2025, 4, 2);
 		// Nota
 		Double valorNota1 = 10.00;
-		TipoDeNota tipoNota1 = TipoDeNota.PRIMER_PARCIAL;
+		TipoDeNota tipoNota1 = TipoDeNota.FINAL;
 		Nota nota1 = new Nota(valorNota1, tipoNota1);
 		Double valorNota2 = 4.00;
 		TipoDeNota tipoNota2 = TipoDeNota.PRIMER_PARCIAL;
@@ -451,14 +589,15 @@ public class PruebaUnlam {
 				fechaInscripcionAlumnoAMateriaUno));
 
 		assertTrue(universidad.registrarNota(comision1.getId(), alumno.getDni(), nota1));
-
+		assertTrue(universidad.aprobarMateria(comision1.getId(), dni, nota1));
 		assertTrue(universidad.inscribirAlumnoAComision(alumno.getDni(), comision2.getId(),
 				fechaInscripcionAlumnoAMateriaDos));
-
 	}
 
+	
+	
 	@Test
-	public void queSePuedaObtenerUnaNota() {
+	public void queSePuedaVerificarQueAproboElFinal() {
 		Universidad universidad = new Universidad();
 		Integer idMateria = 1;
 		Materia materia = new Materia(idMateria, "Matemáticas");
@@ -485,7 +624,7 @@ public class PruebaUnlam {
 		LocalDate fechaInscripcionAlumnoAMateria = LocalDate.of(2022, 4, 2);
 		// Nota
 		Double valorNota = 8.00;
-		TipoDeNota tipoNota = TipoDeNota.PRIMER_PARCIAL;
+		TipoDeNota tipoNota = TipoDeNota.FINAL;
 		Nota nota = new Nota(valorNota, tipoNota);
 
 		assertTrue(universidad.agregarMateria(materia));
@@ -494,8 +633,9 @@ public class PruebaUnlam {
 		assertTrue(universidad.agregarAlumno(alumno));
 		assertTrue(universidad.inscribirAlumnoAComision(alumno.getDni(), comision.getId(),
 				fechaInscripcionAlumnoAMateria));
-		assertTrue(universidad.registrarNota2(comision.getId(), alumno.getDni(), nota));
+		assertTrue(universidad.registrarNota(comision.getId(), alumno.getDni(), nota));
+		assertEquals(8.00, universidad.obtenerNota(comision.getId(), alumno.getDni(), tipoNota), 0.001);
 		
-		Double valorResultante = universidad.obtenerNota(dni, materia);
-		assertEquals(8.00, valorResultante, 0.0001);
-}}
+		assertTrue(universidad.verificarAlumnoAproboFinal(comision.getId(), alumno.getDni()));
+	}
+}
