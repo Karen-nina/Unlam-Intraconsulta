@@ -6,13 +6,13 @@ import java.util.Objects;
 public class CicloLectivo {
 
 	private Integer id;
-    private LocalDate fechaInicio;
-    private LocalDate fechaFinalizacion;
-    private LocalDate fechaInicioInscripcion;
-    private LocalDate fechaFinalizacionInscripcion;
-    
-	public CicloLectivo(Integer id, LocalDate fechaInicio, LocalDate fechaFinalizacion, LocalDate fechaInicioInscripcion,
-			LocalDate fechaFinalizacionInscripcion) {
+	private LocalDate fechaInicio;
+	private LocalDate fechaFinalizacion;
+	private LocalDate fechaInicioInscripcion;
+	private LocalDate fechaFinalizacionInscripcion;
+
+	public CicloLectivo(Integer id, LocalDate fechaInicio, LocalDate fechaFinalizacion,
+			LocalDate fechaInicioInscripcion, LocalDate fechaFinalizacionInscripcion) {
 		super();
 		this.id = id;
 		this.fechaInicio = fechaInicio;
@@ -80,5 +80,5 @@ public class CicloLectivo {
 				&& Objects.equals(fechaInicio, other.fechaInicio)
 				&& Objects.equals(fechaInicioInscripcion, other.fechaInicioInscripcion) && Objects.equals(id, other.id);
 	}
-    
+
 }

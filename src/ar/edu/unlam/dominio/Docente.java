@@ -2,12 +2,12 @@ package ar.edu.unlam.dominio;
 
 import java.util.Objects;
 
-public class Docente{
+public class Docente {
 
 	private Integer dni;
-    private String nombre;
-    private String apellido;
-    
+	private String nombre;
+	private String apellido;
+
 	public Docente(Integer dni, String nombre, String apellido) {
 		super();
 		this.dni = dni;
@@ -56,5 +56,4 @@ public class Docente{
 		return Objects.equals(dni, other.dni);
 	}
 
-	
 }

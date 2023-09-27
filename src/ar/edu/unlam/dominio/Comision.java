@@ -39,6 +39,7 @@ public class Comision {
 		this.dia = dia;
 		this.docentes = new HashSet<>();
 		this.alumnos = new HashSet<>();
+		this.examenes = new ArrayList<>();
 	}
 
 	public Integer getId() {
@@ -47,6 +48,14 @@ public class Comision {
 
 	public void setId(Integer id) {
 		this.id = id;
+	}
+
+	public List<Examen> getExamenes() {
+		return examenes;
+	}
+
+	public void setExamenes(List<Examen> examenes) {
+		this.examenes = examenes;
 	}
 
 	public Materia getMateria() {
@@ -126,30 +135,39 @@ public class Comision {
 		return examenes.add(examen);
 	}
 
-	public Double buscarNota(Alumno alumno, TipoDeNota tipoDeNota) {
-		Double nota = 0.00;
-		for(Examen examen : examenes) {
-			if(examen.getAlumno().equals(alumno) && examen.getNota().getTipo().equals(tipoDeNota)) {
-				nota = examen.getNota().getValor();
-				return nota;
+	public boolean tieneNotaRegistrada(Alumno alumno, TipoDeNota tipo) {
+		for (Examen examen : examenes) {
+			if (examen.getAlumno().equals(alumno) && examen.getNota().getTipo() == tipo) {
+				return true;
 			}
 		}
-		return nota;
+		return false;
 	}
 
-	public Examen buscarExamenPorTipoDeNota(Alumno alumno, TipoDeNota tipoDeNota) {
-		for(Examen examen : examenes) {
-			if(examen.getAlumno().equals(alumno) && examen.getNota().getTipo().equals(tipoDeNota)) {
+	public boolean tieneRecuperatorioRegistrado(Alumno alumno) {
+		for (Examen examen : examenes) {
+			if (examen.getAlumno().equals(alumno)
+					&& examen.getNota().getTipo() == TipoDeNota.RECUPERATORIO_PRIMER_PARCIAL
+					|| examen.getNota().getTipo() == TipoDeNota.RECUPERATORIO_SEGUNDO_PARCIAL) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public Examen buscarExamenPorMateriaYTipoDeNota(Materia materia, TipoDeNota tipoDeNota) {
+		for (Examen examen : examenes) {
+			if (examen.getMateria().equals(materia) && examen.getNota().getTipo() == tipoDeNota) {
 				return examen;
 			}
 		}
 		return null;
 	}
-	
+
 	public Integer cantidadDeNotasPorAlumno(Alumno alumno) {
 		Integer cantidadNotas = 0;
-		for(Examen examenes : examenes) {
-			if(examenes.getAlumno().equals(alumno)) {
+		for (Examen examenes : examenes) {
+			if (examenes.getAlumno().equals(alumno)) {
 				cantidadNotas = cantidadNotas + 1;
 			}
 		}
@@ -159,12 +177,11 @@ public class Comision {
 	public Double calcularPromedioNotas(Alumno alumno) {
 		Integer cantidadDeNotas = cantidadDeNotasPorAlumno(alumno);
 		Double sumaDeNotas = 0.00;
-		for(Examen examenes : examenes) {
-			if(examenes.getAlumno().equals(alumno)) {
+		for (Examen examenes : examenes) {
+			if (examenes.getAlumno().equals(alumno)) {
 				sumaDeNotas = sumaDeNotas + examenes.getNota().getValor();
 			}
 		}
 		return sumaDeNotas / cantidadDeNotas;
 	}
-
 }
