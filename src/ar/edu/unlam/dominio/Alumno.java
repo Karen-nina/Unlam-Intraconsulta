@@ -2,6 +2,7 @@ package ar.edu.unlam.dominio;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -13,6 +14,7 @@ public class Alumno {
 	private LocalDate fechaNacimiento;
 	private LocalDate fechaIngreso;
 	private Set<Materia> materiasAprobadas;
+	private Set<Carrera> carrerasActivas;
 
 	public Alumno(Integer dni, String nombre, String apellido, LocalDate fechaNacimiento, LocalDate fechaIngreso) {
 		super();
@@ -22,6 +24,7 @@ public class Alumno {
 		this.fechaNacimiento = fechaNacimiento;
 		this.fechaIngreso = fechaIngreso;
 		this.materiasAprobadas = new HashSet<>();
+		this.carrerasActivas = new HashSet<>();
 	}
 
 	public Integer getDni() {
@@ -72,6 +75,14 @@ public class Alumno {
 		this.materiasAprobadas = materiasAprobadas;
 	}
 
+	public Set<Carrera> getCarrerasActivas() {
+		return carrerasActivas;
+	}
+
+	public void setCarrerasActivas(Set<Carrera> carrerasActivas) {
+		this.carrerasActivas = carrerasActivas;
+	}
+
 	@Override
 	public int hashCode() {
 		return Objects.hash(dni);
@@ -91,6 +102,18 @@ public class Alumno {
 
 	public Boolean agregarMateriaAprobada(Materia materia) {
 		return materiasAprobadas.add(materia);
+	}
+
+	public boolean tieneMateriaAprobada(Materia materia) {
+		return materiasAprobadas.contains(materia);
+	}
+
+	public boolean agregarCarreraActiva(Carrera carrera) {
+		if (carrerasActivas.contains(carrera)) {
+			return false;
+		}
+		carrerasActivas.add(carrera);
+		return true;
 	}
 
 }
